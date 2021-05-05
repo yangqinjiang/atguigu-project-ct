@@ -1,11 +1,22 @@
 package com.atguigu.ct.consumer.bean;
 
+import com.atguigu.ct.common.api.Column;
+import com.atguigu.ct.common.api.Rowkey;
+import com.atguigu.ct.common.api.TableRef;
+
+@TableRef("ct:calllog")
 public class Calllog {
+    @Rowkey
     private String rowKey;
+    @Column(family = "caller")
     private String call1;
+    @Column(family = "caller")
     private String call2;
+    @Column(family = "caller")
     private String calltime;
+    @Column(family = "caller")
     private String duration;
+    @Column(family = "caller")
     private String flg = "1";// 0 被叫,  1主叫
     private String name;
 

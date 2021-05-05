@@ -42,8 +42,8 @@ public class CalllogConsumer implements Consumer {
 
                     // 优化, 插入类对象数据 到Hbase
                     // 使用反射,注解, 将类对象映射到hbase表中去
-//                    Calllog log = new Calllog(consumerRecord.value());
-//                    dao.insertData(log);
+                    Calllog log = new Calllog(consumerRecord.value());
+                    dao.insertData(log);
                 }
             }
         }catch (Exception e){

@@ -1,5 +1,8 @@
 package com.atguigu.ct.common.bean;
 
+import com.atguigu.ct.common.api.Column;
+import com.atguigu.ct.common.api.Rowkey;
+import com.atguigu.ct.common.api.TableRef;
 import com.atguigu.ct.common.constant.Names;
 import com.atguigu.ct.common.constant.ValueConstant;
 import org.apache.hadoop.conf.Configuration;
@@ -8,6 +11,7 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -193,6 +197,48 @@ public abstract class BaseDao {
 
     protected void putData(Object obj) throws Exception {
         System.out.println(obj.toString());
+        //利用反射,注解技术,自动封装数据
+        Class clazz = obj.getClass();
+        TableRef tableRef = (TableRef)clazz.getAnnotation(TableRef.class);
+        String tableName = tableRef.value();
+
+        // 查找rowkey属性
+        Field[] fs = clazz.getDeclaredFields();
+        String stringRowkey = "";
+        for (Field f : fs){
+            Rowkey rowkey = f.getAnnotation(Rowkey.class);
+            if(null != rowkey){
+                f.setAccessible(true);
+                stringRowkey = (String)f.get(obj);
+                break;
+            }
+        }
+
+        Connection conn = getConnection();
+        Table table = conn.getTable(TableName.valueOf(tableName));
+        Put put = new Put(Bytes.toBytes(stringRowkey));
+        // 查找列族与列名,设置相应的值
+        for (Field f:fs){
+            Column column = f.getAnnotation(Column.class);
+            if (null != column){
+                String family = column.family();
+                String colName = column.column();
+                //列名, 无默认值,则使用其属性名
+                if ( null == colName || "".equals(colName)){
+                    colName = f.getName();
+                }
+                f.setAccessible(true);
+                // 获取相应属性的值
+                String value = (String)f.get(obj);
+                // 调用hbase的函数
+                put.addColumn(Bytes.toBytes(family) , Bytes.toBytes(colName),Bytes.toBytes(value));
+            }
+        }
+        //增加数据
+        table.put(put);
+        //关闭表
+        table.close();
+
     }
     /**
      * 增加多条数据
