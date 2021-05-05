@@ -75,4 +75,17 @@ public class Calllog {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Calllog{" +
+                "rowKey='" + rowKey + '\'' +
+                ", call1='" + call1 + '\'' +
+                ", call2='" + call2 + '\'' +
+                ", calltime='" + calltime + '\'' +
+                ", duration='" + duration + '\'' +
+                ", flg='" + flg + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

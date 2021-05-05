@@ -59,6 +59,7 @@ public abstract class BaseDao {
         if(null == conn){
             Configuration conf = HBaseConfiguration.create();
             conn = ConnectionFactory.createConnection(conf);
+            System.out.println("hbase conn success...");
             connHolder.set(conn);
         }
         return conn;
@@ -76,16 +77,29 @@ public abstract class BaseDao {
      * 创建表,如果表已经存在, 那么删除后, 再创建新的表
      */
     protected void createTableXX(String name, String coprocessorClass, Integer regionCount, String... families)  throws Exception{
+        System.out.println("createTableXX..."+name);
         Admin admin = getAdmin();
         TableName tableName = TableName.valueOf(name);
         if (admin.tableExists(tableName)){
             // 表存在,则删除它
             deleteTable(name);
         }
+        System.out.println("createTable...");
         //创建表
         createTable(name,coprocessorClass,regionCount,families);
     }
 
+    /**
+     * 删除表格
+     * @param name
+     * @throws Exception
+     */
+    protected void deleteTable(String name) throws Exception{
+        TableName tableName = TableName.valueOf(name);
+        Admin admin = getAdmin();
+        admin.disableTable(tableName);//先禁用表
+        admin.deleteTable(tableName);//然后删除表
+    }
     /**
      * 创建表
      * @param name
@@ -93,7 +107,7 @@ public abstract class BaseDao {
      * @param regionCount Integer 分区数量 , 这里使用Integer类型,而不是int基础类型, 方便传入null值
      * @param families
      */
-    private  void createTable(String name,String coprocessorClass,Integer regionCount,, String... families) throws Exception{
+    private  void createTable(String name,String coprocessorClass,Integer regionCount, String... families) throws Exception{
         Admin admin = getAdmin();
         TableName tableName = TableName.valueOf(name);
         // 创建表描述器
@@ -109,18 +123,21 @@ public abstract class BaseDao {
             HColumnDescriptor columnDescriptor = new HColumnDescriptor(family);
             tableDescriptor.addFamily(columnDescriptor);
         }
+        System.out.println("addCoprocessor...");
         // 如果给定协处理器参数 ,则使用它
         if(null != coprocessorClass && !"".equals(coprocessorClass)){
             tableDescriptor.addCoprocessor(coprocessorClass);
         }
-
+        System.out.println("genSplitKeys...");
         // 增加预分区
         if(null == regionCount || regionCount <= 1){
             admin.createTable(tableDescriptor);//不设置分区数量
         }else{
             //有设置分区数量, 则生成分区键...
             byte[][] splitKeys = genSplitKeys(regionCount);
+            System.out.println("genSplitKeys , and createTable...");
             admin.createTable(tableDescriptor,splitKeys);
+            System.out.println("createTable success...");
         }
     }
     // 生成分区键
@@ -140,6 +157,7 @@ public abstract class BaseDao {
 
     //创建命名空间, 如果命名空间已经存在,不需要创建,否则,创建新的
     protected void createNamespaceNx(String namespace) throws  Exception {
+        System.out.println("createNamespaceNx..."+namespace);
         Admin admin = getAdmin();
         try {
             admin.getNamespaceDescriptor(namespace);

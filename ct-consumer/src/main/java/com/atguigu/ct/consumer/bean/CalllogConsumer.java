@@ -2,6 +2,7 @@ package com.atguigu.ct.consumer.bean;
 
 import com.atguigu.ct.common.bean.Consumer;
 import com.atguigu.ct.common.constant.Names;
+import com.atguigu.ct.consumer.dao.HBaseDao;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -38,10 +39,13 @@ public class CalllogConsumer implements Consumer {
                 for (ConsumerRecord<String, String> consumerRecord : consumerRecords) {
                     System.out.println(consumerRecord.value());
                     // 插入数据 到Hbase
+                    Calllog log = new Calllog(consumerRecord.value());
+                    dao.insertData(log);
                 }
             }
         }catch (Exception e){
-
+            e.printStackTrace();
+            System.exit(1);
         }
     }
 

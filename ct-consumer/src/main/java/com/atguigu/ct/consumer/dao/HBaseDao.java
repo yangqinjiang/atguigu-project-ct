@@ -13,7 +13,10 @@ public class HBaseDao extends BaseDao {
     public void init() throws Exception{
         start();
         createNamespaceNx(Names.NAMESPACE.getValue().toString());
-        createTableXX(Names.TABLE.getValue().toString(),"com.atguigu.ct.consumer.coprocessor.InsertCalleeCoprocessor", ValueConstant.REGION_COUNT,Names.CF_CALLER.getValue().toString(),Names.CF_CALLEE.getValue().toString());
+        //TODO: 缺少协处理器模块
+//       createTableXX(Names.TABLE.getValue().toString(),"com.atguigu.ct.consumer.coprocessor.InsertCalleeCoprocessor", ValueConstant.REGION_COUNT,Names.CF_CALLER.getValue().toString(),Names.CF_CALLEE.getValue().toString());
+         createTableXX(Names.TABLE.getValue().toString(),null, ValueConstant.REGION_COUNT,Names.CF_CALLER.getValue().toString(),Names.CF_CALLEE.getValue().toString());
+
         end();
     }
 
