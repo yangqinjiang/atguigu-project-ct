@@ -38,9 +38,12 @@ public class CalllogConsumer implements Consumer {
                 ConsumerRecords<String, String> consumerRecords = consumer.poll(100);//100ms超时时间?
                 for (ConsumerRecord<String, String> consumerRecord : consumerRecords) {
                     System.out.println(consumerRecord.value());
-                    // 插入数据 到Hbase
-                    Calllog log = new Calllog(consumerRecord.value());
-                    dao.insertData(log);
+                    dao.insertData(consumerRecord.value());
+
+                    // 优化, 插入类对象数据 到Hbase
+                    // 使用反射,注解, 将类对象映射到hbase表中去
+//                    Calllog log = new Calllog(consumerRecord.value());
+//                    dao.insertData(log);
                 }
             }
         }catch (Exception e){

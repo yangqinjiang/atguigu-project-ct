@@ -4,9 +4,7 @@ import com.atguigu.ct.common.constant.Names;
 import com.atguigu.ct.common.constant.ValueConstant;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.*;
-import org.apache.hadoop.hbase.client.Admin;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
@@ -195,5 +193,22 @@ public abstract class BaseDao {
 
     protected void putData(Object obj) throws Exception {
         System.out.println(obj.toString());
+    }
+    /**
+     * 增加多条数据
+     * @param name
+     * @param puts
+     */
+    protected void putData( String name, List<Put> puts ) throws Exception {
+
+        // 获取表对象
+        Connection conn = getConnection();
+        Table table = conn.getTable(TableName.valueOf(name));
+
+        // 增加数据
+        table.put(puts);
+
+        // 关闭表
+        table.close();
     }
 }
