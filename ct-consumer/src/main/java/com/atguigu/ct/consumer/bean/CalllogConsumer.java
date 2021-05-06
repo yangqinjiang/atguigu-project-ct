@@ -37,13 +37,23 @@ public class CalllogConsumer implements Consumer {
             while (true){
                 ConsumerRecords<String, String> consumerRecords = consumer.poll(100);//100ms超时时间?
                 for (ConsumerRecord<String, String> consumerRecord : consumerRecords) {
-                    System.out.println(consumerRecord.value());
-                    dao.insertData(consumerRecord.value());
+                    System.out.println(".");
+//                    dao.insertData(consumerRecord.value());
 
                     // 优化, 插入类对象数据 到Hbase
                     // 使用反射,注解, 将类对象映射到hbase表中去
+                    // 主叫用户的记录
                     Calllog log = new Calllog(consumerRecord.value());
                     dao.insertData(log);
+//                    // 被叫用户的记录
+//                    Calllog log2 = new Calllog(consumerRecord.value());
+//                    // 交换两个属性的值
+//                    String call1 = log2.getCall1();
+//                    String call2 = log2.getCall2();
+//                    log2.setCall1(call2);
+//                    log2.setCall2(call1);
+//                    log2.setFlg("0"); // flg = 0
+//                    dao.insertData(log2);
                 }
             }
         }catch (Exception e){

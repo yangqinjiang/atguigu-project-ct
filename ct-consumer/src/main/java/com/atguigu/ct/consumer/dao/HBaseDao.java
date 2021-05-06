@@ -18,8 +18,8 @@ public class HBaseDao extends BaseDao {
         start();
         createNamespaceNx(Names.NAMESPACE.getValue().toString());
         //TODO: 缺少协处理器模块
-//       createTableXX(Names.TABLE.getValue().toString(),"com.atguigu.ct.consumer.coprocessor.InsertCalleeCoprocessor", ValueConstant.REGION_COUNT,Names.CF_CALLER.getValue().toString(),Names.CF_CALLEE.getValue().toString());
-         createTableXX(Names.TABLE.getValue().toString(),null, ValueConstant.REGION_COUNT,Names.CF_CALLER.getValue().toString(),Names.CF_CALLEE.getValue().toString());
+       createTableXX(Names.TABLE.getValue().toString(),"com.atguigu.ct.consumer.coprocessor.InsertCalleeCoprocessor", ValueConstant.REGION_COUNT,Names.CF_CALLER.getValue().toString(),Names.CF_CALLEE.getValue().toString());
+//         createTableXX(Names.TABLE.getValue().toString(),null, ValueConstant.REGION_COUNT,Names.CF_CALLER.getValue().toString(),Names.CF_CALLEE.getValue().toString());
 
         end();
     }
@@ -91,7 +91,8 @@ public class HBaseDao extends BaseDao {
                 +"_"+log.getCall1()
                 + "_" +log.getCalltime()
                 + "_" + log.getCall2()
-                +"_"+log.getDuration());
+                +"_"+log.getDuration()
+                + "_1");
         putData(log);
     }
 }

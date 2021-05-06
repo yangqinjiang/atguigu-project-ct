@@ -196,7 +196,7 @@ public abstract class BaseDao {
      */
 
     protected void putData(Object obj) throws Exception {
-        System.out.println(obj.toString());
+//        System.out.println(obj.toString());
         //利用反射,注解技术,自动封装数据
         Class clazz = obj.getClass();
         TableRef tableRef = (TableRef)clazz.getAnnotation(TableRef.class);
