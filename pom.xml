@@ -13,6 +13,7 @@
         <module>ct-producer</module>
         <module>ct-consumer</module>
         <module>ct-consumer-coprocessor</module>
+        <module>ct-analysis</module>
     </modules>
 
 

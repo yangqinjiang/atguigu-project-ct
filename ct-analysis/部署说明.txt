@@ -1,0 +1,8 @@
+1, 导入数据表
+2, 将c-common的jar包, mysql-connector-java-xxx.jar包放到 /opt/module/hadoop/share/hadoop/common下,
+    因为依赖hadoop-common包,最后分发到其它机器上
+
+3, 使用idea打包此模块的可运行jar包,详见 Artifacts
+4 , 打包好, 在out目录下,有此模块的jar目录
+5, 将整个jar目录上传到/opt/module/data/ct/目录下
+6, 运行: /opt/module/hadoop/bin/yarn jar ct_analysis_jar/ct-analysis.jar
