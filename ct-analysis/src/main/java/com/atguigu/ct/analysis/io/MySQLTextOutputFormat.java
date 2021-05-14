@@ -112,10 +112,10 @@ public class MySQLTextOutputFormat extends OutputFormat<Text,Text> {
             String k = key.toString();
             String[] ks = k.split("_");
             //防御
-            if(2 != ks.length){
-                System.err.println("ks length neq 2");
-                return;
-            }
+//            if(2 != ks.length){
+//                System.err.println("ks length neq 2");
+//                return;
+//            }
             String tel = ks[0];
             String date = ks[1];
 

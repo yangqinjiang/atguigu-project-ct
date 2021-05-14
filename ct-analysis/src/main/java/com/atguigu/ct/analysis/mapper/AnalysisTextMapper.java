@@ -28,7 +28,7 @@ public class AnalysisTextMapper extends TableMapper<Text,Text> {
         String rowkey = Bytes.toString(key.get());
         String[] values = rowkey.split("_");
         //防御
-        if(5 != values.length){
+        if(6 != values.length){
             return;
         }
 
