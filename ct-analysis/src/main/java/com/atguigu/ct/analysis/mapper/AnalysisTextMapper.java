@@ -28,9 +28,9 @@ public class AnalysisTextMapper extends TableMapper<Text,Text> {
         String rowkey = Bytes.toString(key.get());
         String[] values = rowkey.split("_");
         //防御
-        if(6 != values.length){
-            return;
-        }
+//        if(6 != values.length){
+//            return;
+//        }
 
         String call1 = values[1];
         String call2 = values[3];
@@ -39,9 +39,10 @@ public class AnalysisTextMapper extends TableMapper<Text,Text> {
 
 
         // 分析通话日期
-        if(8 != calltime.length()){
-            return;
-        }
+//        if(8 != calltime.length()){
+//            return;
+//        }
+        context.getCounter("myMapper","myKey").increment(1);
         String year = calltime.substring(0, 4);
         String month = calltime.substring(0, 6);
         String date = calltime.substring(0, 8);
@@ -49,18 +50,18 @@ public class AnalysisTextMapper extends TableMapper<Text,Text> {
         //主叫用户
         //主叫用户 - 年
         context.write(new Text(call1 + "_" + year),new Text(duration));
-        //主叫用户 - 月
-        context.write(new Text(call1 + "_" + month),new Text(duration));
-        //主叫用户 -  日
-        context.write(new Text(call1 + "_" + date),new Text(duration));
-
-       // 被叫用户
-        //被叫用户 - 年
-        context.write(new Text(call2 + "_" + year),new Text(duration));
-        //被叫用户 -  月
-        context.write(new Text(call2 + "_" + month),new Text(duration));
-        //被叫用户 - 日
-        context.write(new Text(call2 + "_" + date),new Text(duration));
+//        //主叫用户 - 月
+//        context.write(new Text(call1 + "_" + month),new Text(duration));
+//        //主叫用户 -  日
+//        context.write(new Text(call1 + "_" + date),new Text(duration));
+//
+//       // 被叫用户
+//        //被叫用户 - 年
+//        context.write(new Text(call2 + "_" + year),new Text(duration));
+//        //被叫用户 -  月
+//        context.write(new Text(call2 + "_" + month),new Text(duration));
+//        //被叫用户 - 日
+//        context.write(new Text(call2 + "_" + date),new Text(duration));
 
     }
 }

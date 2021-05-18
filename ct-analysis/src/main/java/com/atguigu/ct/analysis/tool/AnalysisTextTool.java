@@ -1,19 +1,26 @@
 package com.atguigu.ct.analysis.tool;
 
+import com.atguigu.ct.analysis.io.LogOutputFormat;
+
 import com.atguigu.ct.analysis.io.MySQLTextOutputFormat;
+import com.atguigu.ct.analysis.io.MySQLTextOutputFormat2;
 import com.atguigu.ct.analysis.mapper.AnalysisTextMapper;
 import com.atguigu.ct.analysis.reducer.AnalysisTextReducer;
 import com.atguigu.ct.common.constant.Names;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.*;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Random;
 
 /**
  * 分析数据的工具类, key是文本类型的
@@ -48,7 +55,13 @@ public class AnalysisTextTool implements Tool {
         job.setOutputValueClass(Text.class);
         // 紧接着上面的reducer输出后, 调用此outputformat
         // 将输出结果保存到mysql
-        job.setOutputFormatClass(MySQLTextOutputFormat.class);
+//        job.setOutputFormatClass(MySQLTextOutputFormat.class);
+        log.info("set MySQLTextOutputFormat2");
+        job.setOutputFormatClass(MySQLTextOutputFormat2.class);
+//        job.setOutputFormatClass(LogOutputFormat.class);
+
+//        FileInputFormat.setInputPaths(job,new Path("/MySQLTextInputFormat"+Math.random()));
+//        FileOutputFormat.setOutputPath(job,new Path("/MySQLTextOutputFormat"+Math.random()));
         //运行,并等待运行结果
         boolean flg = job.waitForCompletion(true);
         if(flg){
@@ -58,13 +71,17 @@ public class AnalysisTextTool implements Tool {
         }
 
     }
-
+    private Configuration conf;
+    static Logger log = Logger.getLogger(
+            AnalysisTextTool.class.getName());
     public void setConf(Configuration configuration) {
-
+        log.info("setConf");
+        this.conf = configuration;
     }
 
     public Configuration getConf() {
-        return null;
+        log.info("getConf");
+        return this.conf;
     }
 }
 

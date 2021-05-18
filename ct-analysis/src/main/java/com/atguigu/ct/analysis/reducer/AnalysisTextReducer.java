@@ -1,7 +1,9 @@
 package com.atguigu.ct.analysis.reducer;
 
+
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
@@ -10,6 +12,9 @@ import java.io.IOException;
  */
 // 输入输出的key,value都是Text类型
 public class AnalysisTextReducer extends Reducer<Text,Text,Text,Text> {
+    static Logger log = Logger.getLogger(
+            AnalysisTextReducer.class.getName());
+    private Text v = new Text();
     @Override
     protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
         // 同一个key下的所有value集合
@@ -22,9 +27,11 @@ public class AnalysisTextReducer extends Reducer<Text,Text,Text,Text> {
             sumCall++; // 通话次数
 
         }
-        System.out.println("reducer key = " + key.toString());
+//        System.out.println("reducer key = " + key.toString());
         context.getCounter("myReducer",key.toString()).increment(1);
         // reducer写出去, 到outputFormat
-        context.write(key,new Text(sumCall+"_"+sumDuration));
+        v.set(sumCall+"_"+sumDuration);
+        context.write(key,v);
+//        log.info("context write one key =" + key.toString());
     }
 }
