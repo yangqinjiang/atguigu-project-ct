@@ -55,13 +55,12 @@ public class AnalysisTextTool implements Tool {
         job.setOutputValueClass(Text.class);
         // 紧接着上面的reducer输出后, 调用此outputformat
         // 将输出结果保存到mysql
-//        job.setOutputFormatClass(MySQLTextOutputFormat.class);
+        job.setOutputFormatClass(MySQLTextOutputFormat.class);
         log.info("set MySQLTextOutputFormat2");
-        job.setOutputFormatClass(MySQLTextOutputFormat2.class);
-//        job.setOutputFormatClass(LogOutputFormat.class);
+//        job.setOutputFormatClass(MySQLTextOutputFormat2.class);
 
-//        FileInputFormat.setInputPaths(job,new Path("/MySQLTextInputFormat"+Math.random()));
-//        FileOutputFormat.setOutputPath(job,new Path("/MySQLTextOutputFormat"+Math.random()));
+
+//        FileOutputFormat.setOutputPath(job,new Path("/MySQLTextOutputFormat/"+Math.random()));
         //运行,并等待运行结果
         boolean flg = job.waitForCompletion(true);
         if(flg){

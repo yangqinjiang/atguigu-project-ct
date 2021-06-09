@@ -21,14 +21,14 @@ import java.util.Map;
  */
 public class MySQLTextOutputFormat2 extends OutputFormat<Text, Text> {
 
-    protected static class MySQLRecordWriter extends RecordWriter<Text, Text> {
+    protected static class MySQLRecordWriter2 extends RecordWriter<Text, Text> {
 
         private Connection connection = null;
         Map<String, Integer> userMap = new HashMap<String, Integer>();
         Map<String, Integer> dateMap = new HashMap<String, Integer>();
 
-        public MySQLRecordWriter() {
-            System.out.println("new MySQLRecordWriter()");
+        public MySQLRecordWriter2() {
+            System.out.println("new MySQLRecordWriter2()");
             // 获取资源
             connection = JDBCUtil.getConnection();
             PreparedStatement pstat = null;
@@ -145,7 +145,7 @@ public class MySQLTextOutputFormat2 extends OutputFormat<Text, Text> {
     }
 
     public RecordWriter<Text, Text> getRecordWriter(TaskAttemptContext context) throws IOException, InterruptedException {
-        return new MySQLRecordWriter();
+        return new MySQLRecordWriter2();
     }
 
     public void checkOutputSpecs(JobContext context) throws IOException, InterruptedException {

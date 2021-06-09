@@ -13,6 +13,15 @@ import java.io.IOException;
  */
 // 此处的泛型<Text,Text> 是输出的key,value类型
 public class AnalysisTextMapper extends TableMapper<Text,Text> {
+    private Text k = null;
+    private Text v = null;
+    @Override
+    protected void setup(Context context) throws IOException, InterruptedException {
+        super.setup(context);
+        this.k = new Text();
+        this.v = new Text();
+
+    }
 
     @Override
     protected void map(ImmutableBytesWritable key, Result value, Context context) throws IOException, InterruptedException {
@@ -28,9 +37,9 @@ public class AnalysisTextMapper extends TableMapper<Text,Text> {
         String rowkey = Bytes.toString(key.get());
         String[] values = rowkey.split("_");
         //防御
-//        if(6 != values.length){
-//            return;
-//        }
+        if(6 != values.length){
+            return;
+        }
 
         String call1 = values[1];
         String call2 = values[3];
@@ -38,10 +47,10 @@ public class AnalysisTextMapper extends TableMapper<Text,Text> {
         String duration = values[4];
 
 
-        // 分析通话日期
-//        if(8 != calltime.length()){
-//            return;
-//        }
+        // 分析通话日期, 小于8个字符,说明 有错误,直接返回
+        if( calltime.length() < 8){
+            return;
+        }
         context.getCounter("myMapper","myKey").increment(1);
         String year = calltime.substring(0, 4);
         String month = calltime.substring(0, 6);
@@ -49,19 +58,32 @@ public class AnalysisTextMapper extends TableMapper<Text,Text> {
 
         //主叫用户
         //主叫用户 - 年
-        context.write(new Text(call1 + "_" + year),new Text(duration));
-//        //主叫用户 - 月
-//        context.write(new Text(call1 + "_" + month),new Text(duration));
-//        //主叫用户 -  日
-//        context.write(new Text(call1 + "_" + date),new Text(duration));
+        k.set(call1 + "_" + year);
+        v.set(duration);
+        context.write(k,v);
+        //主叫用户 - 月
+        k.set(call1 + "_" + month);
+        v.set(duration);
+        context.write(k,v);
+        //主叫用户 -  日
+        k.set(call1 + "_" + date);
+        v.set(duration);
+        context.write(k,v);
 //
-//       // 被叫用户
-//        //被叫用户 - 年
-//        context.write(new Text(call2 + "_" + year),new Text(duration));
-//        //被叫用户 -  月
-//        context.write(new Text(call2 + "_" + month),new Text(duration));
-//        //被叫用户 - 日
-//        context.write(new Text(call2 + "_" + date),new Text(duration));
+       // 被叫用户
+        //被叫用户 - 年
+        k.set(call2 + "_" + year);
+        v.set(duration);
+        context.write(k,v);
+
+        //被叫用户 -  月
+        k.set(call2 + "_" + month);
+        v.set(duration);
+        context.write(k,v);
+        //被叫用户 - 日
+        k.set(call2 + "_" + date);
+        v.set(duration);
+        context.write(k,v);
 
     }
 }
